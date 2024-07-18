@@ -4,19 +4,23 @@ from openmeteo_sdk.Variable import Variable
 import json
 
 import requests, sys
-from datetime import datetime
 
+from geopy.geocoders import Nominatim
 
 def getGeoData():
     # response = requests.get('http://ip-api.com/json?lang=ru')
-    response = requests.get('http://ip-api.com/json?lang=ru')
-    data = response.json()
-    return data
+    # data = response.json()
+    # return data
+    geolocator = Nominatim(user_agent="MeteoData")
+    location = geolocator.geocode('Ковров')
+    return location
 
 
 def getWeather():
     geo = getGeoData()
     print(geo)
+    print(geo.latitude, geo.longitude)
+    return
 
     # params = {
     #     'units': 'metric',
