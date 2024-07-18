@@ -57,7 +57,6 @@ def getWeather():
         f"Current relative_humidity_2m {current_relative_humidity_2m.Value()}")
 
 def main():
-    api_key = '988a142e7163b02ffa67311a13963db5 '
     getWeather()
 
 
