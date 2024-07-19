@@ -31,26 +31,19 @@
     </form>
 </div>
 <div class="row">
-    {% if data.cityname and data.temp_min and data.temp_max %}
-    <h2 class="text-center">Город: {{data.cityname}}</h2>
+    <h2 class="text-center">{{ city }}</h2>
+    {% for object in data %}
     <div class="col-md-3">
         <div class="card mb-4 box-shadow">
             <div class="card-body">
-                <h3 class="card-title">Сегодня</h3>
-                <p>Температура: от {{data.temp_min}} до {{data.temp_max}} °C</p>
+                <h3 class="card-title">{{ object.date }}</h3>
+                <p>Температура: {{object.temp_min}} - {{object.temp_max}} °C</p>
+                <p>Ожидаемые осадки: {{object.precipitation}} мм.</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card mb-4 box-shadow">
-            <div class="card-body">
-                <h3 class="card-title">Завтра</h3>
-                <p>Минимальная температура: {{data.temp_min}} °C</p>
-                <p>Максимальная температура: {{data.temp_max}} °C</p>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    {% endfor %}
+
 </div>
 </body>
 </html>

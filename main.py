@@ -18,7 +18,7 @@ def weather():
         city_name = request.form['city']
     else:
         city_name = 'Москва'
-    
+
     geo = get_geo_data(city=city_name)
     params = {
         "latitude": geo.latitude,
@@ -28,25 +28,27 @@ def weather():
     }
     response = requests.get("https://api.open-meteo.com/v1/forecast",
                             params=params)
-    
+
     if response.status_code == 200:
         response_json = response.json()
-        data = {
-            "cityname": city_name,
-            "temp_min": str(response_json['daily']['temperature_2m_min'][0]),
-            "temp_max": str(response_json['daily']['temperature_2m_max'][0]),
-        }
-        # Поскольку индекс 0 представляет собой данные на текущий день,
-        # индекс 1 будет представлять данные на завтра
-        tomorrow_temp_min = response_json['daily']['temperature_2m_min'][1]
-        tomorrow_temp_max = response_json['daily']['temperature_2m_max'][1]
-        tomorrow_precipitation = response_json['daily']['precipitation_sum'][1]
-        
-        print(f"Прогноз погоды в {city_name} на завтра:")
-        print(f"Минимальная температура: {tomorrow_temp_min}°C")
-        print(f"Максимальная температура: {tomorrow_temp_max}°C")
-        print(f"Ожидаемое количество осадков: {tomorrow_precipitation} мм")
-        return render_template('index.html', data=data)
+
+        data = {"daily": []}
+        daily = []
+        for day in range(len(response_json['daily']['time'])):
+            one_day = {
+                "date": str(response_json['daily']['time'][day]),
+                "temp_min": str(
+                    response_json['daily']['temperature_2m_min'][day]),
+                "temp_max": str(
+                    response_json['daily']['temperature_2m_max'][day]),
+                "precipitation": str(
+                    response_json['daily']['precipitation_sum'][day])
+            }
+            daily.append(one_day)
+        data["daily"] = daily
+
+        return render_template('index.html', city=city_name,
+                               data=data["daily"])
     else:
         print(f"Ошибка {response.status_code}: {response.text}")
         return render_template('/')
